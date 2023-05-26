@@ -17,7 +17,7 @@ def scrap_website():
     page_number = random.randint(0,2218)
     url = "https://anime-pictures.net/pictures/view_posts/{}?search_tag=light+erotic&lang=en".format(page_number)
     src = get_images_from_website(url)
-    pic_number = int(input("how many pictures you want to fetch?"))
+    pic_number = int(input("how many pictures you want to fetch?({} is max)".format(len(src))))
     directory = r'{}'.format(input("directory to store them:"))
     if not os.path.exists(directory):
         os.makedirs(directory)
