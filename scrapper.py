@@ -1,13 +1,15 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-
+from user_agent import generate_user_agent
 
 class Scrapper(object):
     def __init__(self,url):
         self.reg = r'"(.+?)"'
         
-        self.page = requests.get(url)
+        self.headers = {'User-Agent': generate_user_agent(device_type="desktop", os=('mac', 'linux'))}
+        self.page = requests.get(url,timeout=20,headers=self.headers)
+        
         if self.page.status_code == 200:
             print("successfully connected to ",url)
             self.images = self.__load_images_urls(self.page)
@@ -17,6 +19,7 @@ class Scrapper(object):
             self.images = list(map(lambda n:self.__load_image(n),self.srcs))
         else:
             print("can't connect to ",url)
+            exit(-1)
         
     def __get_required_link(self,link):
         return re.match(r"<.+by_tag=.+>",r"{}".format(link))

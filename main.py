@@ -22,7 +22,7 @@ def scrap_website():
     if not os.path.exists(directory):
         os.makedirs(directory)
     if pic_number > len(src):
-       pic_number = len_src(src)-1
+       pic_number = len(src)-1
     for n in range(pic_number):
        get_image(random.choice(src),directory+"/img"+str(n)+".jpg")
     
