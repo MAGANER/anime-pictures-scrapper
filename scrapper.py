@@ -16,19 +16,15 @@ class Scrapper(object):
         if self.page.status_code == 200:
             print("successfully connected to ",url)
 
-            s = soup(self.page.content,"html.parser")
-            tags = s.find_all(["a"])
-            tags = list(filter(lambda n:"/posts/" in n["href"],tags))
-            tags =list(map(lambda n:"https://anime-pictures.net"+n["href"],tags))
+            links = self.get_links()#fetch links, containing required data
 
-            
-           
-            random_ids = [random.randint(0,len(tags)-1) for _ in range(len(tags))]
+            #get random 
+            random_ids = [random.randint(0,len(links)-1) for _ in range(len(links))]
             for i in random_ids:
                 try:
-                    self.page = requests.get(tags[i],timeout=5,headers=self.__gen_headers())
+                    self.page = requests.get(links[i],timeout=5,headers=self.__gen_headers())
                 except Exception as e:
-                    print("can not catch {} !".format(tags[i]))
+                    print("can not catch {} !".format(links[i]))
                 finally:
                     if self.page.status_code == 200:
                         s = soup(self.page.content,"html.parser")
@@ -38,6 +34,12 @@ class Scrapper(object):
         else:
             print("can't connect to ",url)
             exit(-1)
+
+    def get_links(self):
+        s = soup(self.page.content,"html.parser")
+        links = s.find_all(["a"])
+        links = list(filter(lambda n:"/posts/" in n["href"],links))
+        return list(map(lambda n:"https://anime-pictures.net"+n["href"],links))
 
     def get_images_srcs(self):
         return self.__target_srcs
